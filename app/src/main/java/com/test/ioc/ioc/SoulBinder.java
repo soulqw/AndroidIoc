@@ -16,7 +16,7 @@ public class SoulBinder {
         Class<? extends Activity> clz = activity.getClass();
         injectLayout(activity, clz);
         injectViews(activity, clz);
-        injectEvents(activity, clz);
+        injectEvents(activity);
     }
 
     private static void injectLayout(Activity activity, Class<? extends Activity> clz) {
@@ -52,7 +52,7 @@ public class SoulBinder {
         }
     }
 
-    private static void injectEvents(Activity activity, Class<? extends Activity> clz) {
+    private static void injectEvents(Activity activity) {
         Method[] methods = activity.getClass().getDeclaredMethods();
         for (Method method : methods) {
             Annotation[] annotations = method.getDeclaredAnnotations();
@@ -60,22 +60,24 @@ public class SoulBinder {
                 EventBase base = annotation.annotationType().getAnnotation(EventBase.class);
                 if (base != null) {
                     OnClick onClickAn = (OnClick) annotation;
-                    int viewId = onClickAn.value();
-                    View view = activity.findViewById(viewId);
-                    Class onClickListenerClass = base.listenerTypeClz();
-                    OnClickHandler proxy = new OnClickHandler(activity,method);
-                    Object onClickProxy = Proxy.newProxyInstance(onClickListenerClass.getClassLoader(), new Class[]{onClickListenerClass}, proxy);
-                    view.setOnClickListener((View.OnClickListener) onClickProxy);
-                    try {
-                        Method viewOnClickMethod = view.getClass().getMethod(base.setListenerName(),onClickListenerClass);
-                        viewOnClickMethod.invoke(view,onClickProxy);
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
+                    int[] viewIds = onClickAn.value();
+                    for (int id : viewIds) {
+                        View view = activity.findViewById(id);
+                        Class onClickListenerClass = base.listenerTypeClz();
+                        OnClickHandler proxy = new OnClickHandler(activity,method);
+                        Object onClickProxy = Proxy.newProxyInstance(onClickListenerClass.getClassLoader(), new Class[]{onClickListenerClass}, proxy);
+                        view.setOnClickListener((View.OnClickListener) onClickProxy);
                     }
+//                    try {
+//                        Method viewOnClickMethod = view.getClass().getMethod(base.setListenerName(),onClickListenerClass);
+//                        viewOnClickMethod.invoke(view,onClickProxy);
+//                    } catch (NoSuchMethodException e) {
+//                        e.printStackTrace();
+//                    } catch (IllegalAccessException e) {
+//                        e.printStackTrace();
+//                    } catch (InvocationTargetException e) {
+//                        e.printStackTrace();
+//                    }
 
                 }
             }

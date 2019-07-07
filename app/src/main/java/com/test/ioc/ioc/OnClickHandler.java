@@ -23,7 +23,7 @@ public class OnClickHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-        Object result = this.method.invoke(activity);
+        Object result = this.method.invoke(activity,objects);
         return result;
     }
 }

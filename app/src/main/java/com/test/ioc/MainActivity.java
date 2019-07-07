@@ -28,9 +28,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
-    @OnClick(R.id.fab)
-    public void onFabClick() {
-        Toast.makeText(MainActivity.this, "onFabClick", Toast.LENGTH_SHORT).show();
+    @OnClick({R.id.fab, R.id.button})
+    public void onFabClick(View view) {
+        switch (view.getId()) {
+            case R.id.fab:
+                Toast.makeText(MainActivity.this, "onFabClick", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.button:
+                Toast.makeText(MainActivity.this, "onButton", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     @Override
