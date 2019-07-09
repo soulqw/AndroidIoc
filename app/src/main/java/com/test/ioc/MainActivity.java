@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.qw.HelloWorld;
 import com.test.ioc.ioc.ContentView;
 import com.test.ioc.ioc.InjectView;
 import com.test.ioc.ioc.OnClick;
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.fab)
     FloatingActionButton fab;
 
+
+    @HelloWorld
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
